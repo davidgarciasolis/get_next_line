@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:03 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/02/07 18:40:04 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/02/08 16:32:43 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+char	*reader(int fd)
+{
+	char		*buffer;
+
+	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
+	if (read(fd, buffer, BUFFER_SIZE) <= 0)
+		return (NULL);
+	buffer[BUFFER_SIZE] = '\0';
+	return (buffer);
+}
+
 char *get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*saved;
+	char		*buffer;
 	char		*ptr;
 	char		*result;
-
-	if (!buffer)
-		buffer = malloc(sizeof(char) * BUFFER_SIZE);
-	read(fd, buffer, BUFFER_SIZE);
-	ptr = ft_strchr(buffer, '\n');
-	if (*ptr == '\n')
+	
+	if (!saved)
+		buffer =  reader(fd);
+	else
+		buffer = saved;
+	while(!(ptr = ft_strchr(buffer, '\n')))
 	{
-		*ptr = '\0';
-		result = ft_strdup(buffer);
+		if ((buffer = reader(fd)))
+		{
+			saved = ft_strjoin(saved, buffer);
+			buffer = saved;
+		}
+		else
+		{
+			return (NULL);
+		}
 	}
+	*ptr = '\0';
+	result = ft_strdup(buffer);
+	saved = ft_strdup(&ptr[1]);
+	free(buffer);
 	return (result);
 }
 
@@ -52,9 +77,11 @@ int main(int argc, char **argv)
 		return (1);
 	}
 
-	ptr = get_next_line(fd);
-	printf("%s", ptr);
-	free(ptr);
+	while ((ptr = get_next_line(fd)))
+	{
+		printf("%s\n", ptr);
+		free(ptr);
+	}
 
 	close(fd);
 	return (0);
