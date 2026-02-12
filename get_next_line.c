@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:03 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/02/12 18:58:37 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/02/12 21:00:31 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,35 +33,44 @@ char *get_next_line(int fd)
 {
 	static char	*saved;
 	char		*buffer;
+	char		*tmp;
 	char		*ptr;
 	char		*result;
 	
 	if (!saved)
 	{
-		buffer =  reader(fd);
-		saved = buffer;
+		if ((buffer = reader(fd)))
+			saved = buffer;
+		else
+			return (NULL);
 	}
 	else
+	{
 		buffer = saved;
-	while(!(ptr = ft_strchr(buffer, '\n')))
+	}
+	while(!(ptr = ft_strchr(saved, SEPARATOR)))
 	{
 		if ((buffer = reader(fd)))
 		{
+			tmp = saved;
 			saved = ft_strjoin(saved, buffer);
-			buffer = saved;
+			free(tmp);
 		}
 		else
 		{
-			return (NULL);
+			result = ft_strdup(saved, '\0');
+			free(saved);
+			saved = NULL;
+			return (result);
 		}
 	}
 	*ptr = '\0';
-	result = ft_strdup(buffer);
-	saved = ft_strdup(&ptr[1]);
+	result = ft_strdup(saved , SEPARATOR);
+	saved = ft_strdup(&ptr[1], '\0');
 	free(buffer);
 	return (result);
 }
-
+/*
 int main(int argc, char **argv)
 {
 	int fd;
@@ -82,10 +91,11 @@ int main(int argc, char **argv)
 
 	while ((ptr = get_next_line(fd)))
 	{
-		printf("%s\n", ptr);
+		printf("%s", ptr);
 		free(ptr);
 	}
 
 	close(fd);
 	return (0);
 }
+*/

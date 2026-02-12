@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:15 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/02/12 18:53:11 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/02/12 20:38:02 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,13 @@ char	*ft_strchr(char *str, int c)
 	return (NULL);
 }
 
-char	*ft_strdup(char *s)
+char	*ft_strdup(char *s, char c)
 {
 	int		i;
 	char	*ptr;
 
 	i = 0;
-	ptr = malloc((ft_strlen(s)+ 1) * sizeof(char));
+	ptr = malloc((ft_strlen(s)+ 1 + 1) * sizeof(char));
 	if (!ptr)
 		return (NULL);
 	while (s[i])
@@ -52,6 +52,8 @@ char	*ft_strdup(char *s)
 		ptr[i] = s[i];
 		i++;
 	}
+	ptr[i] = c;
+	i++;
 	ptr[i] = '\0';
 	return (ptr);
 }
