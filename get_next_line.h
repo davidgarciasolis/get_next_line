@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:29 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/02/08 16:30:44 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/02/12 18:58:49 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <stdlib.h>
 # include <fcntl.h>
 
-#define BUFFER_SIZE 2
+#define BUFFER_SIZE 42
 
 int		ft_strlen(char *str);
 char	*ft_strchr(char *str, int c);

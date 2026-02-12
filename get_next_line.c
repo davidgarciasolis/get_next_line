@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:03 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/02/08 16:32:43 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/02/12 18:58:37 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,10 @@ char *get_next_line(int fd)
 	char		*result;
 	
 	if (!saved)
+	{
 		buffer =  reader(fd);
+		saved = buffer;
+	}
 	else
 		buffer = saved;
 	while(!(ptr = ft_strchr(buffer, '\n')))
