@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:03 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/02/12 21:00:31 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/02/14 17:13:03 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,14 @@ char	*reader(int fd)
 {
 	char		*buffer;
 
-	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
 	if (read(fd, buffer, BUFFER_SIZE) <= 0)
+	{
+		free(buffer);
 		return (NULL);
+	}
 	buffer[BUFFER_SIZE] = '\0';
 	return (buffer);
 }
@@ -44,10 +47,6 @@ char *get_next_line(int fd)
 		else
 			return (NULL);
 	}
-	else
-	{
-		buffer = saved;
-	}
 	while(!(ptr = ft_strchr(saved, SEPARATOR)))
 	{
 		if ((buffer = reader(fd)))
@@ -55,9 +54,15 @@ char *get_next_line(int fd)
 			tmp = saved;
 			saved = ft_strjoin(saved, buffer);
 			free(tmp);
+			free(buffer);
 		}
 		else
 		{
+			if (!(ft_strlen(saved)))
+			{
+				free(saved);
+				return (NULL);
+			}
 			result = ft_strdup(saved, '\0');
 			free(saved);
 			saved = NULL;
@@ -66,8 +71,9 @@ char *get_next_line(int fd)
 	}
 	*ptr = '\0';
 	result = ft_strdup(saved , SEPARATOR);
+	tmp = saved;
 	saved = ft_strdup(&ptr[1], '\0');
-	free(buffer);
+	free(tmp);
 	return (result);
 }
 /*
