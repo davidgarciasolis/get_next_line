@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:15 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/02/12 20:38:02 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/02/15 12:42:29 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*ft_strdup(char *s, char c)
 	char	*ptr;
 
 	i = 0;
-	ptr = malloc((ft_strlen(s)+ 1 + 1) * sizeof(char));
+	ptr = malloc(ft_strlen(s) + 2);
 	if (!ptr)
 		return (NULL);
 	while (s[i])

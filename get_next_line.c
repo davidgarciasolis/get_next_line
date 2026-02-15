@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:03 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/02/14 17:13:03 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/02/15 12:45:09 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,22 @@
 
 char	*reader(int fd)
 {
-	char		*buffer;
+	char	*buffer;
+	int		bytes;
 
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
-	if (read(fd, buffer, BUFFER_SIZE) <= 0)
+	bytes = read(fd, buffer, BUFFER_SIZE);
+	if (bytes <= 0)
 	{
 		free(buffer);
 		return (NULL);
 	}
-	buffer[BUFFER_SIZE] = '\0';
+	buffer[bytes] = '\0';
 	return (buffer);
 }
+
 
 char *get_next_line(int fd)
 {
@@ -47,14 +50,18 @@ char *get_next_line(int fd)
 		else
 			return (NULL);
 	}
-	while(!(ptr = ft_strchr(saved, SEPARATOR)))
+	if (!saved)
+    return (NULL);
+	while (saved && !(ptr = ft_strchr(saved, SEPARATOR)))
 	{
 		if ((buffer = reader(fd)))
 		{
-			tmp = saved;
-			saved = ft_strjoin(saved, buffer);
-			free(tmp);
+			tmp = ft_strjoin(saved, buffer);
+			free(saved);
 			free(buffer);
+			if (!tmp)
+    			return (NULL);
+			saved = tmp;
 		}
 		else
 		{
