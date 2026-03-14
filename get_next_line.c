@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:03 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/02/15 12:45:09 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/03/14 13:43:35 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,53 +35,72 @@ char	*reader(int fd)
 }
 
 
-char *get_next_line(int fd)
+static char	*join_saved_buffer(char *saved, char *buffer)
+{
+	char	*tmp;
+
+	tmp = ft_strjoin(saved, buffer);
+	free(saved);
+	free(buffer);
+	return (tmp);
+}
+
+static char	*handle_eof(char **saved)
+{
+	char	*result;
+
+	if (!ft_strlen(*saved))
+	{
+		free(*saved);
+		*saved = NULL;
+		return (NULL);
+	}
+	result = ft_strdup(*saved, '\0');
+	free(*saved);
+	*saved = NULL;
+	return (result);
+}
+
+static char	*extract_line(char **saved, char *ptr)
+{
+	char	*result;
+	char	*tmp;
+
+	*ptr = '\0';
+	result = ft_strdup(*saved, SEPARATOR);
+	if (!result)
+		return (free(*saved), *saved = NULL, NULL);
+	tmp = ft_strdup(ptr + 1, '\0');
+	free(*saved);
+	if (!tmp)
+	{
+		*saved = NULL;
+		return (result);
+	}
+	*saved = tmp;
+	return (result);
+}
+
+char	*get_next_line(int fd)
 {
 	static char	*saved;
 	char		*buffer;
-	char		*tmp;
 	char		*ptr;
-	char		*result;
-	
-	if (!saved)
+
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
+		return (free(saved), saved = NULL, NULL);
+	if (!saved && !(saved = reader(fd)))
+		return (NULL);
+	while (!(ptr = ft_strchr(saved, SEPARATOR)))
 	{
-		if ((buffer = reader(fd)))
-			saved = buffer;
-		else
+		buffer = reader(fd);
+		if (!buffer)
+			return (handle_eof(&saved));
+		saved = join_saved_buffer(saved, buffer);
+		if (!saved)
 			return (NULL);
 	}
-	if (!saved)
-    return (NULL);
-	while (saved && !(ptr = ft_strchr(saved, SEPARATOR)))
-	{
-		if ((buffer = reader(fd)))
-		{
-			tmp = ft_strjoin(saved, buffer);
-			free(saved);
-			free(buffer);
-			if (!tmp)
-    			return (NULL);
-			saved = tmp;
-		}
-		else
-		{
-			if (!(ft_strlen(saved)))
-			{
-				free(saved);
-				return (NULL);
-			}
-			result = ft_strdup(saved, '\0');
-			free(saved);
-			saved = NULL;
-			return (result);
-		}
-	}
-	*ptr = '\0';
-	result = ft_strdup(saved , SEPARATOR);
-	tmp = saved;
-	saved = ft_strdup(&ptr[1], '\0');
-	free(tmp);
-	return (result);
+	return (extract_line(&saved, ptr));
 }
 /*
 int main(int argc, char **argv)
