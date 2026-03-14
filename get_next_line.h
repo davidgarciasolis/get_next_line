@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:29 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/03/14 14:48:31 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/03/14 22:49:11 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 # ifndef SEPARATOR
 #  define SEPARATOR '\n'
 # endif
-
 
 int		ft_strlen(char *str);
 char	*ft_strchr(char *str, int c);

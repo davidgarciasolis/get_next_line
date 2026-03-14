@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:03 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/03/14 14:50:15 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/03/14 22:51:05 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ char	*reader(int fd)
 	buffer[bytes] = '\0';
 	return (buffer);
 }
-
 
 static char	*join_saved_buffer(char *saved, char *buffer)
 {
@@ -89,9 +88,14 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
 		return (free(saved), saved = NULL, NULL);
-	if (!saved && !(saved = reader(fd)))
-		return (NULL);
-	while (!(ptr = ft_strchr(saved, SEPARATOR)))
+	if (!saved)
+	{
+		saved = reader(fd);
+		if (!saved)
+			return (NULL);
+	}
+	ptr = ft_strchr(saved, SEPARATOR);
+	while (!ptr)
 	{
 		buffer = reader(fd);
 		if (!buffer)
@@ -99,6 +103,7 @@ char	*get_next_line(int fd)
 		saved = join_saved_buffer(saved, buffer);
 		if (!saved)
 			return (NULL);
+		ptr = ft_strchr(saved, SEPARATOR);
 	}
 	return (extract_line(&saved, ptr));
 }
