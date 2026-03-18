@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:03 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/03/14 22:51:05 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/03/18 20:16:52 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static char	*join_saved_buffer(char *saved, char *buffer)
 	return (tmp);
 }
 
-static char	*handle_eof(char **saved)
+static char	*end(char **saved)
 {
 	char	*result;
 
@@ -60,7 +60,7 @@ static char	*handle_eof(char **saved)
 	return (result);
 }
 
-static char	*extract_line(char **saved, char *ptr)
+static char	*result_line(char **saved, char *ptr)
 {
 	char	*result;
 	char	*tmp;
@@ -99,15 +99,15 @@ char	*get_next_line(int fd)
 	{
 		buffer = reader(fd);
 		if (!buffer)
-			return (handle_eof(&saved));
+			return (end(&saved));
 		saved = join_saved_buffer(saved, buffer);
 		if (!saved)
 			return (NULL);
 		ptr = ft_strchr(saved, SEPARATOR);
 	}
-	return (extract_line(&saved, ptr));
+	return (result_line(&saved, ptr));
 }
-/*
+
 int main(int argc, char **argv)
 {
 	int fd;
@@ -135,4 +135,4 @@ int main(int argc, char **argv)
 	close(fd);
 	return (0);
 }
-*/
+
