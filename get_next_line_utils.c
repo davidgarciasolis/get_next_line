@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:15 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/03/21 19:29:32 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/03/21 22:52:49 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,18 @@ char	*ft_strchr(char *str, int c)
 	return (NULL);
 }
 
+char	*handle_read_result(int bytes, char *saved, char *buffer)
+{
+	if (bytes < 0)
+	{
+		free(buffer);
+		free(saved);
+		return (NULL);
+	}
+	free(buffer);
+	return (saved);
+}
+
 char	*ft_strdup(char *s, char c)
 {
 	int		i;
@@ -60,54 +72,29 @@ char	*ft_strdup(char *s, char c)
 
 char	*ft_strjoin(char *s1, char *s2)
 {
-	size_t	size;
+	size_t	len;
 	char	*ptr;
-	size_t	x;
-	size_t	y;
+	size_t	i;
+	size_t	j;
 
 	if (!s1)
 		return (ft_strdup(s2, '\n'));
-	size = ft_strlen(s1) + ft_strlen(s2) + 1;
-	ptr = malloc(size);
+	len = ft_strlen(s1) + ft_strlen(s2) + 1;
+	ptr = malloc(len);
 	if (!ptr)
 		return (NULL);
-	x = 0;
-	y = 0;
-	while (s1[x])
-	{
-		ptr[x] = s1[x];
-		x++;
-	}
-	while (s2[y])
-	{
-		ptr[x + y] = s2[y];
-		y++;
-	}
-	ptr[x + y] = '\0';
-	return (ptr);
-}
-
-size_t	ft_strlcpy(char *dst, char *src, size_t size)
-{
-	const char	*s;
-	char		*d;
-	size_t		i;
-
-	s = (char *)src;
-	d = (char *)dst;
 	i = 0;
-	if (size != 0)
+	while (s1[i])
 	{
-		while (i < size - 1 && s[i])
-		{
-			d[i] = s[i];
-			i++;
-		}
-		d[i] = '\0';
-	}
-	while (s[i])
-	{
+		ptr[i] = s1[i];
 		i++;
 	}
-	return (i);
+	j = 0;
+	while (s2[j])
+	{
+		ptr[i + j] = s2[j];
+		j++;
+	}
+	ptr[i + j] = '\0';
+	return (ptr);
 }
