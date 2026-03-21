@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:29 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/03/14 22:49:11 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/03/21 19:11:41 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,7 @@ char	*ft_strdup(char *s, char c);
 char	*get_next_line(int fd);
 char	*ft_strjoin(char *s1, char *s2);
 char	*get_next_line(int fd);
+size_t	ft_strlcpy(char *dst, char *src, size_t size);
+char	*ft_substr(char *s, int start, size_t len);
 
 #endif

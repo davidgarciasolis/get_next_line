@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:15 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/03/14 13:00:04 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/03/21 19:29:32 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ char	*ft_strjoin(char *s1, char *s2)
 	size_t	x;
 	size_t	y;
 
+	if (!s1)
+		return (ft_strdup(s2, '\n'));
 	size = ft_strlen(s1) + ft_strlen(s2) + 1;
 	ptr = malloc(size);
 	if (!ptr)
@@ -83,4 +85,29 @@ char	*ft_strjoin(char *s1, char *s2)
 	}
 	ptr[x + y] = '\0';
 	return (ptr);
+}
+
+size_t	ft_strlcpy(char *dst, char *src, size_t size)
+{
+	const char	*s;
+	char		*d;
+	size_t		i;
+
+	s = (char *)src;
+	d = (char *)dst;
+	i = 0;
+	if (size != 0)
+	{
+		while (i < size - 1 && s[i])
+		{
+			d[i] = s[i];
+			i++;
+		}
+		d[i] = '\0';
+	}
+	while (s[i])
+	{
+		i++;
+	}
+	return (i);
 }

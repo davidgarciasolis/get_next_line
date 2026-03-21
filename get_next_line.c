@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:03 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/03/18 20:16:52 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/03/21 19:45:12 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,98 +16,103 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char	*reader(int fd)
+char	*ft_substr(char *s, int start, size_t len)
+{
+	size_t	size;
+	char	*ptr;
+
+	if (len == 0 || start >= ft_strlen(s))
+	{
+		ptr = malloc(1);
+		if (!ptr)
+			return (NULL);
+		ptr[0] = '\0';
+		return (ptr);
+	}
+	size = ft_strlen(&s[start]);
+	if (size < len)
+		ptr = malloc(size + 1);
+	else
+		ptr = malloc(len + 1);
+	if (!ptr)
+		return (NULL);
+	if (start >= ft_strlen(s))
+		ft_strlcpy(ptr, "", size);
+	else if (size < len)
+		ft_strlcpy(ptr, &s[start], size + 1);
+	else
+		ft_strlcpy(ptr, &s[start], len + 1);
+	return (ptr);
+}
+
+char	*read_and_join(int fd, char *saved)
 {
 	char	*buffer;
 	int		bytes;
-
-	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buffer)
-		return (NULL);
-	bytes = read(fd, buffer, BUFFER_SIZE);
-	if (bytes <= 0)
+	char 	*tmp;
+	
+	while (!saved || !ft_strchr(saved, '\n'))
 	{
+		buffer = malloc(BUFFER_SIZE + 1);
+		if (!buffer)
+			return (free(saved), NULL);
+		bytes = read(fd, buffer, BUFFER_SIZE);
+		if (bytes <= 0)
+			return (free(buffer), bytes < 0 ? free(saved), NULL : saved);
+		buffer[bytes] = '\0';
+		if (!saved)
+			saved = ft_strdup(buffer, '\0');
+		else
+		{
+			tmp = ft_strjoin(saved, buffer);
+			free(saved);
+			saved = tmp;
+		}
 		free(buffer);
-		return (NULL);
+		if (!saved)
+			return (NULL);
 	}
-	buffer[bytes] = '\0';
-	return (buffer);
+	return (saved);
 }
 
-static char	*join_saved_buffer(char *saved, char *buffer)
+char	*extract_line_static(char **saved)
 {
-	char	*tmp;
+	char	*line;
+	char	*rest;
+	char	*ptr;
+	int		len;
 
-	tmp = ft_strjoin(saved, buffer);
-	free(saved);
-	free(buffer);
-	return (tmp);
-}
-
-static char	*end(char **saved)
-{
-	char	*result;
-
-	if (!ft_strlen(*saved))
-	{
-		free(*saved);
-		*saved = NULL;
-		return (NULL);
-	}
-	result = ft_strdup(*saved, '\0');
-	free(*saved);
-	*saved = NULL;
-	return (result);
-}
-
-static char	*result_line(char **saved, char *ptr)
-{
-	char	*result;
-	char	*tmp;
-
-	*ptr = '\0';
-	result = ft_strdup(*saved, SEPARATOR);
-	if (!result)
+	if (!*saved || **saved == '\0')
 		return (free(*saved), *saved = NULL, NULL);
-	tmp = ft_strdup(ptr + 1, '\0');
-	free(*saved);
-	if (!tmp)
+	ptr = ft_strchr(*saved, '\n');
+	if (ptr)
 	{
-		*saved = NULL;
-		return (result);
+		len = ptr - *saved + 1;
+		line = ft_substr(*saved, 0, len);
+		rest = ft_strdup(ptr + 1, '\0');
 	}
-	*saved = tmp;
-	return (result);
+	else
+	{
+		line = ft_strdup(*saved, '\0');
+		rest = NULL;
+	}
+	free(*saved);
+	*saved = rest;
+	return (line);
 }
 
 char	*get_next_line(int fd)
 {
 	static char	*saved;
-	char		*buffer;
-	char		*ptr;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) < 0)
-		return (free(saved), saved = NULL, NULL);
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	saved = read_and_join(fd, saved);
 	if (!saved)
-	{
-		saved = reader(fd);
-		if (!saved)
-			return (NULL);
-	}
-	ptr = ft_strchr(saved, SEPARATOR);
-	while (!ptr)
-	{
-		buffer = reader(fd);
-		if (!buffer)
-			return (end(&saved));
-		saved = join_saved_buffer(saved, buffer);
-		if (!saved)
-			return (NULL);
-		ptr = ft_strchr(saved, SEPARATOR);
-	}
-	return (result_line(&saved, ptr));
+		return (NULL);
+	return (extract_line_static(&saved));
 }
-
+/*
 int main(int argc, char **argv)
 {
 	int fd;
@@ -136,3 +141,4 @@ int main(int argc, char **argv)
 	return (0);
 }
 
+*/
