@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:03 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/03/21 22:52:49 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/03/21 23:08:03 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,30 +25,16 @@ char	*saved_join(char *saved, char *buffer)
 	return (tmp);
 }
 
-char	*ft_substr(char *s, int start, size_t len)
+char	*handle_read_result(int bytes, char *saved, char *buffer)
 {
-	char	*ptr;
-	size_t	size;
-	size_t	idx;
-
-	if (!s)
-		return (NULL);
-	size = ft_strlen(s);
-	if (start < 0 || (size_t)start >= size)
-		return (ft_strdup("", '\0'));
-	if (len > size - start)
-		len = size - start;
-	ptr = malloc(len + 1);
-	if (!ptr)
-		return (NULL);
-	idx = 0;
-	while (idx < len)
+	if (bytes < 0)
 	{
-		ptr[idx] = s[start + idx];
-		idx++;
+		free(buffer);
+		free(saved);
+		return (NULL);
 	}
-	ptr[idx] = '\0';
-	return (ptr);
+	free(buffer);
+	return (saved);
 }
 
 char	*read_and_join(int fd, char *saved)
