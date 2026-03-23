@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:29 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/03/21 22:52:49 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/03/23 19:48:52 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define GET_NEXT_LINE_H
 # include <unistd.h>
 # include <stdlib.h>
+# include <stdio.h>
+# include <fcntl.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
@@ -25,11 +27,10 @@
 
 int		ft_strlen(char *str);
 char	*ft_strchr(char *str, int c);
-char	*ft_strdup(char *s, char c);
+char	*ft_strdup(char *s);
 char	*ft_strjoin(char *s1, char *s2);
-char	*free_and_null(char *ptr);
 char	*ft_substr(char *s, int start, size_t len);
-char	*handle_read_result(int bytes, char *saved, char *buffer);
+char	*read_fail(int bytes, char *saved, char *buffer);
 char	*get_next_line(int fd);
 
 #endif

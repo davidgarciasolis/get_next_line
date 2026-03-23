@@ -6,7 +6,7 @@
 /*   By: davgarc4 <davgarc4@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/07 13:26:15 by davgarc4          #+#    #+#             */
-/*   Updated: 2026/03/21 23:08:26 by davgarc4         ###   ########.fr       */
+/*   Updated: 2026/03/23 19:40:26 by davgarc4         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char	*ft_substr(char *s, int start, size_t len)
 		return (NULL);
 	size = ft_strlen(s);
 	if (start < 0 || (size_t)start >= size)
-		return (ft_strdup("", '\0'));
+		return (ft_strdup(""));
 	if (len > size - start)
 		len = size - start;
 	ptr = malloc(len + 1);
@@ -64,24 +64,27 @@ char	*ft_substr(char *s, int start, size_t len)
 	return (ptr);
 }
 
-char	*ft_strdup(char *s, char c)
+char	*ft_strdup(char *s)
 {
-	int		i;
-	char	*ptr;
+	char		*copy;
+	size_t		i;
 
 	i = 0;
-	ptr = malloc(ft_strlen(s) + 2);
-	if (!ptr)
-		return (NULL);
-	while (s[i])
+	while (s[i] != '\0')
 	{
-		ptr[i] = s[i];
 		i++;
 	}
-	ptr[i] = c;
-	i++;
-	ptr[i] = '\0';
-	return (ptr);
+	copy = malloc(sizeof(char) * (i + 1));
+	if (copy == NULL)
+		return (NULL);
+	i = 0;
+	while (s[i] != '\0')
+	{
+		copy[i] = s[i];
+		i++;
+	}
+	copy[i] = '\0';
+	return (copy);
 }
 
 char	*ft_strjoin(char *s1, char *s2)
@@ -92,7 +95,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	size_t	j;
 
 	if (!s1)
-		return (ft_strdup(s2, '\n'));
+		return (ft_strdup(s2));
 	len = ft_strlen(s1) + ft_strlen(s2) + 1;
 	ptr = malloc(len);
 	if (!ptr)
